@@ -9,10 +9,25 @@ namespace App\Services\Converters;
 class BpmToMillisecondsConverter
 {
 
+    /*
+     * @var float given Beats Per Minute
+     */
     protected $bpm;
+
+    /*
+     * @var string the signature of the song
+     */
     protected $signature;
+
+    /**
+     * @var int the number of pulse for bar 
+     */
     protected $beat;
-    protected $kind;
+
+    /**
+     * @var length of the bar
+     */
+    protected $bar;
 
     /**
      * Gives you the time in milliseconds between each pulse
@@ -29,9 +44,15 @@ class BpmToMillisecondsConverter
         $this->checkBpm();
         $this->unserializeSignature();
 
-        return round(60000 / $bpm);
+        return $this->compute();
     } 
 
+    /**
+     * Check the validity of the given BPM
+     *
+     * @throws \Exception
+     * @return self
+     */
     private function checkBpm()
     {
         if ($this->bpm < 1) {
@@ -41,6 +62,13 @@ class BpmToMillisecondsConverter
         return $this;
     }
 
+    /**
+     * Check the validity of the given signature and split it 
+     * in two values
+     *
+     * @throws \Exception
+     * @return self
+     */
     private function unserializeSignature()
     {
         $exploded = explode("/", $this->signature);
@@ -54,8 +82,13 @@ class BpmToMillisecondsConverter
         }
 
         $this->beat = $exploded[0];
-        $this->kind = $exploded[1];
+        $this->bar = $exploded[1];
 
         return $this;
+    }
+
+    private function compute()
+    {
+        return round(60000 / $this->bpm);
     }
 }
