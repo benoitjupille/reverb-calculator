@@ -89,6 +89,6 @@ class BpmToMillisecondsConverter
 
     private function compute()
     {
-        return round(60000 / $this->bpm);
+        return round((60000 / $this->bpm) / ($this->beat / $this->bar));
     }
 }
